@@ -1,18 +1,36 @@
-# Multi-Agent AI Workflow with Tool Calling
+# 🤖 Multi-Agent AI Workflow with Tool Calling
 
-A production-style agentic AI system where multiple specialized agents collaborate to complete complex user requests.
+A production-style agentic AI system where multiple specialized agents collaborate to complete complex user requests — built with **LangGraph**, **FastAPI**, and **PostgreSQL**.
 
-## Overview
+![Python](https://img.shields.io/badge/python-3.12+-blue.svg)
+![FastAPI](https://img.shields.io/badge/FastAPI-async-009688.svg)
+![LangGraph](https://img.shields.io/badge/LangGraph-orchestration-6f42c1.svg)
+![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)
 
-This project implements a multi-agent AI workflow system using LangGraph, FastAPI, and PostgreSQL. The system features:
+---
 
-- **Planner Agent**: Breaks down user requests into structured plans
-- **Research Agent**: Collects and analyzes information
-- **Database Agent**: Executes safe database queries
-- **Code Agent**: Performs controlled code analysis and transformations
-- **Synthesis Agent**: Combines results into coherent responses
+## ✨ Overview
 
-## Architecture
+This project implements a multi-agent AI workflow system featuring:
+
+- 🧠 **Planner Agent** — Breaks down user requests into structured plans
+- 🔎 **Research Agent** — Collects and analyzes information
+- 🗄️ **Database Agent** — Executes safe database queries
+- 💻 **Code Agent** — Performs controlled code analysis and transformations
+- 🧩 **Synthesis Agent** — Combines results into coherent responses
+
+<!--
+📸 SCREENSHOT 1 — Dashboard
+-->
+<p align="center">
+  <img src="docs/screenshots/dashboard.png" alt="Dashboard screenshot" width="800">
+  <br>
+  <em>Dashboard overview</em>
+</p>
+
+---
+
+## 🏗️ Architecture
 
 ```mermaid
 graph TD
@@ -27,7 +45,18 @@ graph TD
     Orchestrator -.-> Approval[Human Approval Checkpoint]
 ```
 
-## Agent Responsibilities
+<!--
+📸 SCREENSHOT 2 — Dynamic Agent Visualization
+-->
+<p align="center">
+  <img src="docs/screenshots/agent-visualization.png" alt="Dynamic agent visualization" width="800">
+  <br>
+  <em>Dynamic agent visualization</em>
+</p>
+
+---
+
+## 🤖 Agent Responsibilities
 
 ### 1. Planner Agent
 - Receives high-level user goals
@@ -59,51 +88,50 @@ graph TD
 - Distinguishes success/failure
 - Formats user-friendly results
 
-## Workflow Lifecycle
+---
 
-1. **User Request**: Client submits a task to `/workflows`
-2. **Planning**: Planner decomposes the request into subtasks
-3. **Execution**: Workers execute assigned subtasks
-4. **Human Approval**: Critical actions pause for approval
-5. **Synthesis**: Results are combined and formatted
-6. **Completion**: Final response is returned to client
+## 🔄 Workflow Lifecycle
 
-## Safety Mechanisms
+1. **User Request** — Client submits a task to `/workflows`
+2. **Planning** — Planner decomposes the request into subtasks
+3. **Execution** — Workers execute assigned subtasks
+4. **Human Approval** — Critical actions pause for approval
+5. **Synthesis** — Results are combined and formatted
+6. **Completion** — Final response is returned to client
 
-### Step Limits
-- Maximum configurable steps per workflow
-- Prevents infinite execution
-- Marks workflows as "limited" when exceeded
+---
 
-### Loop Prevention
-- Tracks agent transitions
-- Monitors repeated tool calls
-- Detects and blocks cycles
+## 🛡️ Safety Mechanisms
 
-### Budget Enforcement
-- Per-run token/cost budget
-- Continuous usage monitoring
-- Automatic workflow termination
+| Mechanism | Description |
+|---|---|
+| **Step Limits** | Maximum configurable steps per workflow; prevents infinite execution; marks workflows as "limited" when exceeded |
+| **Loop Prevention** | Tracks agent transitions, monitors repeated tool calls, detects and blocks cycles |
+| **Budget Enforcement** | Per-run token/cost budget with continuous usage monitoring and automatic termination |
+| **Human-in-the-Loop** | Approval required for destructive actions via explicit approve/reject endpoints; resumes only after approval |
 
-### Human-in-the-Loop
-- Approval required for destructive actions
-- Explicit approval/rejection endpoints
-- Resumes execution only after approval
+---
 
-## API Endpoints
+## 📡 API Endpoints
 
 ### Workflow Management
-- `POST /workflows` - Create and start a workflow
-- `GET /workflows/{id}` - Get workflow state
-- `GET /workflows/{id}/trace` - Get execution trace
-- `POST /workflows/{id}/approve` - Approve pending checkpoint
-- `POST /workflows/{id}/reject` - Reject pending checkpoint
-- `POST /workflows/{id}/resume` - Resume interrupted workflow
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/workflows` | Create and start a workflow |
+| `GET` | `/workflows/{id}` | Get workflow state |
+| `GET` | `/workflows/{id}/trace` | Get execution trace |
+| `POST` | `/workflows/{id}/approve` | Approve pending checkpoint |
+| `POST` | `/workflows/{id}/reject` | Reject pending checkpoint |
+| `POST` | `/workflows/{id}/resume` | Resume interrupted workflow |
 
 ### Health Check
-- `GET /health` - Service health status
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/health` | Service health status |
 
-## Local Setup
+---
+
+## 🚀 Local Setup
 
 ### Prerequisites
 - Python 3.12+
@@ -114,6 +142,7 @@ graph TD
 
 ```bash
 # Clone the repository
+git clone <repo-url>
 cd project-directory
 
 # Install Python dependencies
@@ -137,14 +166,17 @@ python -m app.api.main
 ```bash
 # Build and start services
 docker-compose up -d
-
-# Access the application
-# FastAPI API: http://localhost:8000
-# PostgreSQL: localhost:5432
-# Redis: localhost:6379
 ```
 
-## Environment Variables
+| Service | URL |
+|---|---|
+| FastAPI API | http://localhost:8000 |
+| PostgreSQL | localhost:5432 |
+| Redis | localhost:6379 |
+
+---
+
+## ⚙️ Environment Variables
 
 ```env
 # LLM Configuration
@@ -173,7 +205,9 @@ MAX_RETRIES=3
 APPROVAL_REQUIRED=true
 ```
 
-## LLM Integration
+---
+
+## 🔌 LLM Integration
 
 This project uses OpenRouter for LLM integration with support for multiple models and providers.
 
@@ -185,23 +219,18 @@ LLM_MODE=online
 OPENROUTER_API_KEY=your_actual_api_key
 OPENROUTER_MODEL=openai/gpt-3.5-turbo
 ```
-
-When in online mode:
 - PlannerAgent uses the LLM to intelligently decompose user requests into subtasks
 - SynthesisAgent uses the LLM to generate natural language summaries of results
 - All API calls go to OpenRouter
-- Requires valid API key
+- Requires a valid API key
 
 #### 2. Offline Mode (Development/Testing)
 ```env
 LLM_MODE=offline
 ```
-
-When in offline mode:
 - PlannerAgent returns mock structured plans
 - SynthesisAgent returns mock synthesized responses
-- No API calls are made
-- No API key required
+- No API calls are made, no API key required
 - Useful for testing and development without incurring API costs
 
 ### Setting Up OpenRouter API
@@ -219,10 +248,10 @@ OpenRouter supports hundreds of models from different providers:
 
 ```bash
 # Popular options:
-- openai/gpt-3.5-turbo (fast, low cost)
-- openai/gpt-4 (most capable)
-- anthropic/claude-2 (strong reasoning)
-- meta-llama/llama-2-70b (open source)
+- openai/gpt-3.5-turbo       # fast, low cost
+- openai/gpt-4               # most capable
+- anthropic/claude-2         # strong reasoning
+- meta-llama/llama-2-70b     # open source
 ```
 
 Check available models at: https://openrouter.ai/docs/models
@@ -230,13 +259,13 @@ Check available models at: https://openrouter.ai/docs/models
 ### Error Handling
 
 The LLM client includes robust error handling for:
-- **Missing API Key**: Falls back to offline mode if not provided
-- **Network Errors**: Logs and falls back to keyword matching for planner
-- **Malformed Responses**: Validates JSON structure and provides detailed errors
-- **Timeout Errors**: Configurable timeout with graceful degradation
-- **API Rate Limits**: Proper error messages for rate limit errors
+- **Missing API Key** — Falls back to offline mode if not provided
+- **Network Errors** — Logs and falls back to keyword matching for planner
+- **Malformed Responses** — Validates JSON structure and provides detailed errors
+- **Timeout Errors** — Configurable timeout with graceful degradation
+- **API Rate Limits** — Proper error messages for rate limit errors
 
-All errors are logged but do not crash the workflow - the system continues with fallback mechanisms.
+All errors are logged but do not crash the workflow — the system continues with fallback mechanisms.
 
 ### Using the LLM Client
 
@@ -260,62 +289,68 @@ if result["success"]:
     plan = result["data"]
 ```
 
-## Running Tests
+---
 
-```bash
-# Run unit tests
-pytest tests/unit/
+## 📊 Example Workflow
 
-# Run integration tests
-pytest tests/integration/
+**Request:** *"Research the recent advances in transformer models and create a summary."*
 
-# Run evaluation suite
-python scripts/run_evaluation.py
-
-# Run all tests
-pytest
-```
-
-## Example Workflow
-
-**Request**: "Research the recent advances in transformer models and create a summary."
-
-1. **Planning**: Planner creates subtasks
+1. **Planning** — Planner creates subtasks:
    - Research recent transformer papers
    - Summarize key advances
    - Format final response
 
-2. **Execution**: Research agent executes
+2. **Execution** — Research agent executes:
    - Searches web for recent papers
    - Extracts key information
    - Handles failures gracefully
 
-3. **Synthesis**: Synthesis agent compiles
+<!--
+📸 SCREENSHOT 3 — Execution Trace
+-->
+<p align="center">
+  <img src="docs/screenshots/execution-trace.png" alt="Execution trace screenshot" width="800">
+  <br>
+  <em>Execution trace</em>
+</p>
+
+3. **Synthesis** — Synthesis agent compiles:
    - Combines findings
    - Distinguishes reliable info
    - Returns formatted response
 
-4. **Completion**: Final response sent to client
+4. **Completion** — Final response sent to client
 
-## Testing
+<!--
+📸 SCREENSHOT 4 — Final Synthesized Result
+-->
+<p align="center">
+  <img src="docs/screenshots/final-result.png" alt="Final synthesized result screenshot" width="800">
+  <br>
+  <em>Final synthesized result</em>
+</p>
+
+---
+
+## 🧪 Testing
 
 The project includes comprehensive tests covering:
 
-1. **Planner Functionality**: Plan creation and validation
-2. **Agent Handoffs**: Worker agent coordination
-3. **Tool Validation**: Schema verification and execution
-4. **Safety Mechanisms**: Step limits, budget, loops
-5. **API Endpoints**: All API functionality
-6. **End-to-End Workflows**: Complete execution scenarios
+1. **Planner Functionality** — Plan creation and validation
+2. **Agent Handoffs** — Worker agent coordination
+3. **Tool Validation** — Schema verification and execution
+4. **Safety Mechanisms** — Step limits, budget, loops
+5. **API Endpoints** — All API functionality
+6. **End-to-End Workflows** — Complete execution scenarios
 
-Run tests with:
 ```bash
-pytest tests/unit/   # Unit tests
-pytest tests/integration/  # Integration tests
+pytest tests/unit/          # Unit tests
+pytest tests/integration/   # Integration tests
 python scripts/run_evaluation.py  # Evaluation suite
+pytest                      # Run all tests
 ```
 
-## Evaluation
+## 📈 Evaluation
 
 The evaluation suite runs 20+ representative scenarios covering:
 
@@ -329,49 +364,51 @@ The evaluation suite runs 20+ representative scenarios covering:
 
 Results are saved to `evaluation_results.json`.
 
-## Known Limitations
+---
 
-- Human approval requires manual intervention for critical actions
+## ⚠️ Known Limitations
+
 - Evaluation uses simulated APIs where real services aren't available
 - Resource-intensive operations may hit budget limits
 - Workflow state persistence is limited to PostgreSQL
 
-## Future Improvements
+## 🗺️ Future Improvements
 
-- Add more specialized worker agents
-- Integrate additional tool types
-- Implement more advanced planning strategies
-- Add support for external MCP servers
-- Enhance monitoring and observability
-- Implement workflow templates
-- Add support for conversational memory
+- [ ] Add more specialized worker agents
+- [ ] Integrate additional tool types
+- [ ] Implement more advanced planning strategies
+- [ ] Add support for external MCP servers
+- [ ] Enhance monitoring and observability
+- [ ] Implement workflow templates
+- [ ] Add support for conversational memory
 
-## Project Structure
+---
+
+## 📁 Project Structure
 
 ```
 .
 ├── app/
-│   ├── api/          # FastAPI API layer
-│   ├── agents/       # Agent implementations
-│   ├── graph/        # LangGraph workflows
-│   ├── tools/        # Tool implementations
-│   ├── models/       # Pydantic schemas
-│   ├── services/     # Business logic
-│   ├── repositories/ # Database operations
-│   ├── core/         # Core abstractions
-│   ├── schemas/      # Shared schemas
-│   └── observability/ # Monitoring and logging
+│   ├── api/            # FastAPI API layer
+│   ├── agents/         # Agent implementations
+│   ├── graph/          # LangGraph workflows
+│   ├── tools/          # Tool implementations
+│   ├── models/         # Pydantic schemas
+│   ├── services/       # Business logic
+│   ├── repositories/   # Database operations
+│   ├── core/           # Core abstractions
+│   ├── schemas/        # Shared schemas
+│   └── observability/  # Monitoring and logging
 ├── tests/
-│   ├── unit/         # Unit tests
-│   ├── integration/  # Integration tests
-│   └── evaluation/   # Evaluation scenarios
-├── scripts/          # Development scripts
-├── docker/          # Docker configurations
-├── docs/            # Documentation
-├── .env.example     # Environment template
-└── requirements.txt # Dependencies
+│   ├── unit/            # Unit tests
+│   ├── integration/     # Integration tests
+│   └── evaluation/      # Evaluation scenarios
+├── scripts/             # Development scripts
+├── docker/              # Docker configurations
+├── docs/
+│   └── screenshots/     # README screenshots
+├── .env.example         # Environment template
+└── requirements.txt     # Dependencies
 ```
 
-## License
-
-This project is part of the Qwen Code development environment.
+---

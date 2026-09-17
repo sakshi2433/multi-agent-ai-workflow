@@ -1,0 +1,48 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: multi_agent_postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: ${POSTGRES_DB:-multi_agent_db}
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: multi_agent_redis
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: multi_agent_app
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgresql://user:password@postgres:5432/multi_agent_db}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
+      OPENROUTER_MODEL: ${OPENROUTER_MODEL:-openai/gpt-3.5-turbo}
+      MAX_WORKFLOW_STEPS: ${MAX_WORKFLOW_STEPS:-100}
+      WORKFLOW_BUDGET_LIMIT_USD: ${WORKFLOW_BUDGET_LIMIT_USD:-10.0}
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+      - redis
+    restart: unless-stopped
+    volumes:
+      - ../:/app
+
+volumes:
+  postgres_data:
+  redis_data:

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Agent AI Workflow</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Multi-Agent AI Workflow</h1>
+            <p class="description">A production-grade system where multiple specialized agents collaborate to complete complex user requests.</p>
+            <div class="health-status">
+                <span class="health-indicator" id="health-indicator"></span>
+                <span class="health-text">Health: <span id="health-status-text">Connecting...</span></span>
+            </div>
+            
+            <div class="approval-controls" id="approval-controls" style="display:none;">
+                <button class="btn btn-primary" id="approve-btn">Approve</button>
+                <button class="btn btn-secondary" id="reject-btn">Reject</button>
+            </div>
+        </header>
+
+        <main>
+            <section class="card">
+                <h2>Create Workflow</h2>
+                <form id="workflow-form">
+                    <div class="form-group">
+                        <label for="workflow-request">Workflow Request</label>
+                        <textarea id="workflow-request" name="workflow-request" rows="8" placeholder="Enter your workflow request here..." required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="workflow-name">Workflow Name</label>
+                        <input type="text" id="workflow-name" name="workflow-name" placeholder="e.g., AI Research Workflow" value="AI Research Workflow">
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="run-workflow-btn">Run Workflow</button>
+                    <div class="loading-state" id="loading-state" style="display:none;">
+                        <div class="spinner" id="spinner"></div>
+                        <p>Running workflow...</p>
+                    </div>
+                </form>
+                <div class="error-message" id="error-message" style="display:none;"></div>
+            </section>
+
+            <section class="card">
+                <h2>Workflow Information</h2>
+                <div class="workflow-info" id="workflow-info" style="display:none;">
+                    <p><strong>Workflow ID:</strong> <span id="workflow-id"></span></p>
+                    <p><strong>Status:</strong> <span id="workflow-status"></span></p>
+                    <p><strong>Current Step:</strong> <span id="current-step"></span></p>
+                    <p><strong>Current Agent:</strong> <span id="current-agent"></span></p>
+                    <p><strong>Created:</strong> <span id="created-time"></span></p>
+                    <p><strong>Completed:</strong> <span id="completed-time"></span></p>
+                </div>
+            </section>
+
+            <section class="card">
+                <h2>Agent Visualization</h2>
+                <div class="agents-grid" id="agents-grid">
+                    <div class="agent-card planner-card">
+                        <h3>Planner</h3>
+                        <p class="agent-status" id="planner-status">Ready</p>
+                    </div>
+                    <div class="agent-card research-card">
+                        <h3>Research</h3>
+                        <p class="agent-status" id="research-status">Ready</p>
+                    </div>
+                    <div class="agent-card database-card">
+                        <h3>Database</h3>
+                        <p class="agent-status" id="database-status">Ready</p>
+                    </div>
+                    <div class="agent-card code-card">
+                        <h3>Code</h3>
+                        <p class="agent-status" id="code-status">Ready</p>
+                    </div>
+                    <div class="agent-card synthesis-card">
+                        <h3>Synthesis</h3>
+                        <p class="agent-status" id="synthesis-status">Ready</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card">
+                <h2>Results</h2>
+                <div class="results-panel" id="results-panel" style="display:none;">
+                    <div class="result-header">
+                        <h3>Final Result</h3>
+                        <button class="btn btn-copy" id="copy-result-btn">Copy</button>
+                    </div>
+                    <div class="result-content" id="result-content" style="display:none;"></div>
+                </div>
+            </section>
+
+            <section class="card">
+                <h2>Execution Trace</h2>
+                <div class="trace-panel" id="trace-panel" style="display:none;">
+                    <div class="trace-header">
+                        <h3>Workflow Execution Timeline</h3>
+                    </div>
+                    <div class="trace-body" id="trace-body"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
